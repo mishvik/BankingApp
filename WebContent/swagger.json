@@ -1,0 +1,37 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Banking Application"
+    },
+    "paths": {
+        "/account": {
+            "get": {
+                "description": "Gets Account Balance for given accountNo.\nMandatory query param of accountNo and detail\n",
+                "parameters": [
+                    {
+                        "name": "accountNo",
+                        "in": "query",
+                        "description": "accountNo of customer",
+                        "required": true,
+                        "type": "number",
+                        "format": "int"
+                    },
+                    {
+                        "name": "detail",
+                        "in": "query",
+                        "description": "operation (balance)",
+                        "required": true,
+                        "type": "string",
+                        "format": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response gets account balance"
+                    }
+                }
+            }
+        }
+    }
+}

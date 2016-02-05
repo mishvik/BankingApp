@@ -1,0 +1,84 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'war'
+apply plugin: "org.sonarqube"
+apply plugin: 'jacoco'
+
+group = 'com.ibm.enterprise'
+version = '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "BankingApplication"
+        property "sonar.projectKey", "BankingApplication"
+        property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
+    }
+}
+
+war {
+    from("/WebContent/conf/") {
+        include 'config.properties' into ('conf')
+    }
+	from("/WebContent/WEB-INF/") {
+        include 'web.xml' into ('WEB-INF')
+    }
+	from("/WebContent/") {
+        include 'swagger.json'
+    }
+}
+
+repositories {
+        
+     maven { url "http://download.java.net/maven/2/" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'com.sun.jersey', name: 'jersey-server', version:'1.9'
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version:'2.11.4'
+}
+
+buildscript {
+    repositories { 
+      maven {
+        url "http://repo1.maven.org/maven2/"
+      }
+      maven {
+        url "https://plugins.gradle.org/m2/"
+      }
+      mavenLocal()
+    }
+    dependencies { 
+      classpath 'org.ajoberstar:gradle-jacoco:0.1.0'
+      classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.1'
+    }
+}
+
+test {
+    // enable TestNG support (default is JUnit)
+    useTestNG()
+    scanForTestClasses = false  
+    include '**/*'
+
+    testLogging {
+        showStandardStreams = true
+
+        // log results to "build/test-results" directory
+        exceptionFormat "full"
+        events "started", "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}
+
+repositories { 
+  repositories { 
+    maven {
+      url "http://repo1.maven.org/maven2/"
+    }
+  }
+}
+
+dependencies {
+    testCompile 'org.testng:testng:6.1.1'
+}
